@@ -1,4 +1,5 @@
+yfinance
+pandas
 streamlit
 requests
-pandas
-yfinance
+astral
