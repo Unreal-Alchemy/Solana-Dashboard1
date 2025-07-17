@@ -51,3 +51,18 @@ sl = sol_price * 0.96
 
 st.code(f"Entry: {entry:.2f}\nTake Profit: {tp:.2f}\nStop Loss: {sl:.2f}")
 st.line_chart(sol_df["Close"])
+import streamlit.components.v1 as components
+
+st.subheader("📊 TradingView Live Chart")
+
+tradingview_embed = """
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&theme=dark&style=1&locale=en" 
+    width="100%" height="500" frameborder="0" allowtransparency="true" scrolling="no">
+  </iframe>
+</div>
+<!-- TradingView Widget END -->
+"""
+
+components.html(tradingview_embed, height=520)
