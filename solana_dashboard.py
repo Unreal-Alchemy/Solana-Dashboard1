@@ -6,6 +6,7 @@ import streamlit.components.v1 as components
 from datetime import datetime, timedelta
 from astral import LocationInfo
 from astral.sun import sun
+from pytz import timezone as pytz_timezone  # ✅ added for timezone-safe datetime
 
 st.set_page_config(page_title="Solana Trading Dashboard", layout="wide")
 st.title("📊 Solana (SOL) Dashboard")
@@ -73,57 +74,5 @@ st.line_chart(sol_df["Close"])
 st.subheader("📊 TradingView Live Chart")
 tradingview_embed = """
 <div class="tradingview-widget-container">
-  <iframe src="https://s.tradingview.com/widgetembed/?symbol=BINANCE:SOLUSDT&interval=60&theme=dark&style=1&locale=en"
-    width="100%" height="500" frameborder="0" allowtransparency="true" scrolling="no">
-  </iframe>
-</div>
-"""
-components.html(tradingview_embed, height=520)
-
-# ------------------------- Rahu Kaal Toggle & Calculation -------------------------
-
-show_rahu = st.toggle("🕉️ Show Rahu Kaal Timings")
-
-if show_rahu:
-    st.subheader("🕉️ Rahu Kaal Time Based on Your Location")
-
-    # Ask for user location
-    col1, col2 = st.columns(2)
-    with col1:
-        city = st.text_input("City", value="New Delhi")
-    with col2:
-        timezone = st.text_input("Timezone", value="Asia/Kolkata")
-
-    # Setup location for astral
-    location = LocationInfo(city, "", timezone, 28.6139, 77.2090)  # Default: Delhi coords
-
-    # Calculate real sunrise
-    s = sun(location.observer, date=datetime.now(), tzinfo=location.timezone)
-    sunrise = s["sunrise"]
-
-    def get_rahu_kaal_period(day_of_week, sunrise_time):
-        rahu_kaal_offsets = {
-            0: (7, 8.5),    # Monday
-            1: (13, 14.5),  # Tuesday
-            2: (10.5, 12),  # Wednesday
-            3: (12, 13.5),  # Thursday
-            4: (14.5, 16),  # Friday
-            5: (8.5, 10),   # Saturday
-            6: (9, 10.5)    # Sunday
-        }
-        start_offset, end_offset = rahu_kaal_offsets[day_of_week]
-        start = sunrise_time + timedelta(hours=start_offset)
-        end = sunrise_time + timedelta(hours=end_offset)
-        return start, end
-
-    today = datetime.now()
-    weekday = today.weekday()
-    rahu_start, rahu_end = get_rahu_kaal_period(weekday, sunrise)
-
-    st.info(f"Today’s Rahu Kaal: {rahu_start.strftime('%I:%M %p')} - {rahu_end.strftime('%I:%M %p')}")
-
-    now = datetime.now()
-    if rahu_start <= now <= rahu_end:
-        st.warning("⚠️ You are currently in Rahu Kaal — avoid new trades.")
-
-# ------------------------- END -------------------------
+  <iframe src="https://s.trading
+  
